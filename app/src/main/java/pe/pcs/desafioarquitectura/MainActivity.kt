@@ -29,6 +29,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             DesafioArquitecturaTheme {
 
+                //https://api.themoviedb.org/3/tv/series_id/images/
+                //https://image.tmdb.org/t/p/w500
+
                 val movies = produceState<List<MovieResponse>>(initialValue = emptyList()) {
                     value = Retrofit.Builder()
                         .baseUrl("https://api.themoviedb.org/3/")
@@ -46,7 +49,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     LazyVerticalGrid(columns = GridCells.Adaptive(180.dp)){ 
                         items(movies.value){
-                            AsyncImage(model = it.poster_path, contentDescription = "La imagen")
+                            AsyncImage(model = "https://image.tmdb.org/t/p/w500${it.poster_path}", contentDescription = "La imagen")
                             Text(text = it.title)
                         }
                     }
