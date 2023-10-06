@@ -1,4 +1,4 @@
-package pe.pcs.desafioarquitectura.ui
+package pe.pcs.desafioarquitectura
 
 import com.google.gson.annotations.SerializedName
 

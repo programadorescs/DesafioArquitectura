@@ -1,7 +1,6 @@
 package pe.pcs.desafioarquitectura
 
 import com.google.gson.annotations.SerializedName
-import pe.pcs.desafioarquitectura.ui.MovieResponse
 
 data class MovieResult(
     @SerializedName("page") val page: Int = 0,
