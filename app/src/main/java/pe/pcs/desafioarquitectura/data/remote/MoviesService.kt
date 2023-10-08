@@ -1,4 +1,4 @@
-package pe.pcs.desafioarquitectura
+package pe.pcs.desafioarquitectura.data.remote
 
 import retrofit2.http.GET
 

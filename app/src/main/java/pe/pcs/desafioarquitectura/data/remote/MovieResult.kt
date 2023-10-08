@@ -1,4 +1,4 @@
-package pe.pcs.desafioarquitectura
+package pe.pcs.desafioarquitectura.data.remote
 
 import com.google.gson.annotations.SerializedName
 
