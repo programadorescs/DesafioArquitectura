@@ -7,9 +7,8 @@ import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface MoviesDao
-{
-    @Query("Select * From localmovie")
+interface MoviesDao {
+    @Query("Select id, title, overview, posterPath, favorite From localmovie")
     fun getMovies(): Flow<List<LocalMovie>>
 
     @Insert

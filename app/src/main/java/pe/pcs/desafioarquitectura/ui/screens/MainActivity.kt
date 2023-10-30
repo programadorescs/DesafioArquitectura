@@ -6,7 +6,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.room.Room
 import pe.pcs.desafioarquitectura.data.MoviesRepository
-import pe.pcs.desafioarquitectura.data.local.LocalDataSource
 import pe.pcs.desafioarquitectura.data.local.MoviesDatabase
 import pe.pcs.desafioarquitectura.data.remote.RemoteDataSource
 import pe.pcs.desafioarquitectura.ui.screens.home.Home
@@ -27,7 +26,7 @@ class MainActivity : ComponentActivity() {
         ).build()
 
         val repository = MoviesRepository(
-            localDataSource = LocalDataSource(db.moviesDao()),
+            dao = db.moviesDao(),
             remoteDataSource = RemoteDataSource()
         )
 

@@ -4,30 +4,23 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import pe.pcs.desafioarquitectura.data.Movie
 import pe.pcs.desafioarquitectura.data.MoviesRepository
-import pe.pcs.desafioarquitectura.data.local.MoviesDao
-import pe.pcs.desafioarquitectura.data.local.toLocalMovie
-import pe.pcs.desafioarquitectura.data.local.toMovie
-import pe.pcs.desafioarquitectura.data.remote.MoviesService
-import pe.pcs.desafioarquitectura.data.remote.toLocalMovie
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import pe.pcs.desafioarquitectura.ui.screens.core.UiState
 
 class HomeViewModel(private val repository: MoviesRepository) : ViewModel() {
 
-    private val _state = MutableStateFlow(UiState())
-    val state: StateFlow<UiState> = _state
+    private val _state = MutableStateFlow<UiState<List<Movie>>>(UiState.Loading)
+    val state: StateFlow<UiState<List<Movie>>> = _state
 
     init {
         viewModelScope.launch {
-            _state.value = UiState(loading = true)
+            _state.value = UiState.Loading
             repository.requestMovies()
 
             repository.movies.collect {
-                _state.value = UiState(movies = it)
+                _state.value = UiState.Success(it)
             }
         }
     }
@@ -40,10 +33,5 @@ class HomeViewModel(private val repository: MoviesRepository) : ViewModel() {
             repository.updateMovie(movie.copy(favorite = !movie.favorite))
         }
     }
-
-    data class UiState(
-        val loading: Boolean = false,
-        val movies: List<Movie> = emptyList()
-    )
 
 }

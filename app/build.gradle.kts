@@ -4,6 +4,7 @@ plugins {
 
     // Para las anotaciones
     id("kotlin-kapt")
+    //id("com.google.devtools.ksp")
 }
 
 android {
@@ -82,6 +83,8 @@ dependencies {
     //Room
     implementation("androidx.room:room-ktx:2.5.2")
     kapt("androidx.room:room-compiler:2.5.2")
+//    implementation("androidx.room:room-ktx:2.6.0")
+//    ksp("androidx.room:room-compiler:2.6.0")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

@@ -1,5 +1,6 @@
 package pe.pcs.desafioarquitectura.ui.screens.home
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,13 +29,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import pe.pcs.desafioarquitectura.data.Movie
 import pe.pcs.desafioarquitectura.data.MoviesRepository
-import pe.pcs.desafioarquitectura.data.local.MoviesDao
-import pe.pcs.desafioarquitectura.data.remote.MovieResponse
+import pe.pcs.desafioarquitectura.ui.screens.core.UiState
 import pe.pcs.desafioarquitectura.ui.theme.DesafioArquitecturaTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,9 +43,6 @@ import pe.pcs.desafioarquitectura.ui.theme.DesafioArquitecturaTheme
 fun Home(moviesRepository: MoviesRepository) {
 
     DesafioArquitecturaTheme {
-
-        //https://api.themoviedb.org/3/tv/series_id/images/
-        //https://image.tmdb.org/t/p/w500
 
         val viewModel: HomeViewModel = viewModel { HomeViewModel(moviesRepository) }
         val state by viewModel.state.collectAsState()
@@ -56,28 +54,38 @@ fun Home(moviesRepository: MoviesRepository) {
         ) {
 
             Scaffold(topBar = { TopAppBar(title = { Text(text = "MOVIES") }) }) { padding ->
-                if (state.loading) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
-                    }
-                }
+                state.let {
+                    when (it) {
+                        is UiState.Error -> Toast.makeText(
+                            LocalContext.current,
+                            it.message,
+                            Toast.LENGTH_LONG
+                        ).show()
 
-                if (state.movies.isNotEmpty()) {
-                    LazyVerticalGrid(
-                        columns = GridCells.Adaptive(120.dp),
-                        modifier = Modifier.padding(padding),
-                        horizontalArrangement = Arrangement.spacedBy(4.dp),
-                        verticalArrangement = Arrangement.spacedBy(4.dp),
-                        contentPadding = PaddingValues(4.dp)
-                    ) {
-                        items(state.movies) {
-                            MovieItem(
-                                movie = it,
-                                onClick = { viewModel.onMovieClick(it) }
-                            )
+                        is UiState.Loading -> {
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                CircularProgressIndicator()
+                            }
+                        }
+
+                        is UiState.Success -> {
+                            LazyVerticalGrid(
+                                columns = GridCells.Adaptive(120.dp),
+                                modifier = Modifier.padding(padding),
+                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                verticalArrangement = Arrangement.spacedBy(4.dp),
+                                contentPadding = PaddingValues(4.dp)
+                            ) {
+                                items(it.data) { theMovie ->
+                                    MovieItem(
+                                        movie = theMovie,
+                                        onClick = { viewModel.onMovieClick(theMovie) }
+                                    )
+                                }
+                            }
                         }
                     }
                 }
